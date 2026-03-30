@@ -2,13 +2,15 @@ name: Keep Supabase Awake
 
 on:
   schedule:
-    - cron: "0 0 */2 * *" # every 2 days (UTC)
+    - cron: '0 */4 * * *'  # Every 4 hours
   workflow_dispatch:
 
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase REST
+      - name: Ping Supabase database
         run: |
-          curl -s https://ngvbdnhwvdteipdaggoe.supabase.co/rest/v1/ > /dev/null
+          curl -s "https://ngvbdnhwvdteipdaggoe.supabase.co/rest/v1/app_compliance?select=id" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" || true
